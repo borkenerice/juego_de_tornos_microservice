@@ -26,8 +26,6 @@ paths:
                 type: object
                 items:
                   $ref: '#/definitions/Place'
-        204:
-          description: No places found
     post:
       operationId: api.juego_tornos.create_place
       tags: [Place]
