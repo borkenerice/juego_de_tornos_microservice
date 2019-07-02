@@ -15,7 +15,7 @@ def client():
         yield client
 
 
-def test_find_all_places_response_status(client):
+def test_find_all_places(client):
     """
     Check correct response code for a get request to the place endpoint
     :param client: fixture
@@ -58,7 +58,7 @@ def test_create_place(client):
     assert response.status_code == 201
 
 
-def test_create_place_same_name_error(client):
+def test_create_place_same_name(client):
     """
     Check correct response code for a post request to create a place if it has the same name as one that already exists
     :param client: fixture
@@ -81,10 +81,10 @@ def test_update_place(client):
         'name': 'Place Update Test',
     }
     response = client.put('/api/place/1', json=place)
-    assert response.status_code == 201
+    assert response.status_code == 200
 
 
-def test_update_place_same_name_error(client):
+def test_update_place_same_name(client):
     """
     Check correct response code for a put request to update a place if it has the same name as one that already exists
     :param client: fixture
@@ -107,7 +107,7 @@ def test_delete_place(client):
     assert response.status_code == 200
 
 
-def test_delete_place_does_not_exists_error(client):
+def test_delete_place_does_not_exists(client):
     """
     Check correct response code for a delete request to delete a place that do not exists
     :param client: fixture
