@@ -13,9 +13,9 @@ basePath: /api
 paths:
   /place:
     get:
-      operationId: api.juego_tornos_places.find_all_places
+      operationId: api.juego_tornos_places.find_places_and_characters
       tags: [Place]
-      summary: Get all Places
+      summary: Get all Places, and the characters belonging to each place
       responses:
         200:
           description: List of all Places
@@ -25,7 +25,7 @@ paths:
               places:
                 type: object
                 items:
-                  $ref: '#/definitions/Place'
+                  $ref: '#/definitions/Place_and_character'
     post:
       operationId: api.juego_tornos_places.create_place
       tags: [Place]
@@ -127,7 +127,7 @@ paths:
           description: List of all Characters
           schema:
             type: object
-            $ref: '#/definitions/Character_no_place_id'
+            $ref: '#/definitions/Character'
         204:
           description: No characters found
   /character/{character_id}:
@@ -200,6 +200,18 @@ definitions:
         example: "Westeros"
         minLength: 1
         maxLength: 100
+  Place_and_character:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+      characters:
+        type: array
+        items:
+          $ref: '#/definitions/Character'
+
   Character:
     type: object
     required:
@@ -217,26 +229,6 @@ definitions:
         description: Character's place id. Required if the character is alive.
         example: "3"
         pattern: "^[0-9]+$"
-      king:
-        type: boolean
-        description: If a character is the king of the place.
-        example: false
-      alive:
-        type: boolean
-        description: If a character ir alive(true) or dead(false). If not set, defaults to dead.
-        example: false
-  Character_no_place_id:
-    type: object
-    required:
-      - name
-      - king
-    properties:
-      name:
-        type: string
-        description: Character's unique name.
-        example: "Jon"
-        minLength: 1
-        maxLength: 100
       king:
         type: boolean
         description: If a character is the king of the place.

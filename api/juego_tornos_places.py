@@ -2,6 +2,9 @@ import requests
 
 import config
 from flask import abort
+from werkzeug.exceptions import HTTPException
+
+from api.juego_tornos_characters import find_characters_by_place_id
 
 
 def find_all_places():
@@ -10,7 +13,7 @@ def find_all_places():
         if r.status_code == 200:
             return r.json()
         else:
-            return r.status_code
+            abort(r.status_code, r.json())
     except requests.ConnectionError:
         abort(500, f'ConnectionError: A connection to the service could not be established')
 
@@ -21,9 +24,26 @@ def find_place_by_id(place_id):
         if r.status_code == 200:
             return r.json()
         else:
-            return r.json(), r.status_code
+            abort(r.status_code, r.json())
     except requests.ConnectionError:
         abort(500, f'ConnectionError: A connection to the service could not be established')
+
+
+def find_places_and_characters():
+    places = find_all_places()
+    new_places = []
+    for place_position in range(len(places)):
+        place = places[place_position]
+        place['characters'] = []
+        try:
+            characters = find_characters_by_place_id(place['place_id'])
+            for character_position in range(len(characters)):
+                place['characters'].append(characters[character_position])
+        # capture the exception raised if no character is found for the place id
+        except HTTPException:
+            pass
+        new_places.append(place)
+    return new_places
 
 
 def create_place(place_data):
