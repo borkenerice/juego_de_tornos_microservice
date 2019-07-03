@@ -18,8 +18,8 @@ def find_all_characters():
 def create_character(character_data):
     try:
         r = requests.post(config.CHARACTERS_ENDPOINT, json=character_data)
-        if r.status_code == 200:
-            return r.json()
+        if r.status_code == 201:
+            return r.json(), 201
         else:
             abort(r.status_code, r.json())
     except requests.ConnectionError:
