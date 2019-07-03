@@ -97,14 +97,14 @@ def test_update_place_same_name(client):
     assert response.status_code == 400
 
 
-def test_delete_place(client):
+def test_delete_place_with_characters(client):
     """
-    Check correct response code for a delete request to delete a place
+    Check correct response code for a delete request to delete a place containing characters
     :param client: fixture
     :return:
     """
     response = client.delete('/api/place/1')
-    assert response.status_code == 200
+    assert response.status_code == 400
 
 
 def test_delete_place_does_not_exists(client):
