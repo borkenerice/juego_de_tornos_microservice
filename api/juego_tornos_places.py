@@ -70,10 +70,21 @@ def update_place(place_id, place_data):
 
 def delete_place(place_id):
     try:
-        r = requests.delete(f'{config.PLACES_ENDPOINT}/{place_id}')
-        if r.status_code == 200:
-            return f'Place {place_id} deleted'
+        if not place_contains_characters(place_id):
+            r = requests.delete(f'{config.PLACES_ENDPOINT}/{place_id}')
+            if r.status_code == 200:
+                return f'Place {place_id} deleted'
+            else:
+                abort(r.status_code, r.json())
         else:
-            abort(r.status_code, r.json())
+            abort(400, f'Cannot delete place, there are characters in it')
     except requests.ConnectionError:
         abort(500, f'ConnectionError: A connection to the service could not be established')
+
+
+def place_contains_characters(place_id):
+    try:
+        find_characters_by_place_id(place_id)
+        return True
+    except NotFound:
+        return False
