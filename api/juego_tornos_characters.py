@@ -63,7 +63,7 @@ def delete_character_by_id(character_id):
     try:
         r = requests.delete(f'{config.CHARACTERS_ENDPOINT}/{character_id}')
         if r.status_code == 200:
-            return 200
+            return f'Character with the id: {character_id}'
         else:
             abort(r.status_code, r.json())
     except requests.ConnectionError:
