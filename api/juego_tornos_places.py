@@ -43,7 +43,7 @@ def find_places_and_characters():
         except NotFound:
             pass
         new_places.append(place)
-    return new_places, 200
+    return new_places
 
 
 def create_place(place_data):
