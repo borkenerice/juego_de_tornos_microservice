@@ -1,0 +1,239 @@
+swagger: "2.0"
+info:
+  description: Simple API Juego de Tornos. Join the Fight!
+  version: "1.0"
+  title: Juego de Tornos API
+consumes:
+  - application/json
+produces:
+  - application/json
+
+basePath: /api
+
+paths:
+  /place:
+    get:
+      operationId: api.juego_tornos_places.find_places_and_characters
+      tags: [Place]
+      summary: Get all Places, and the characters belonging to each place
+      responses:
+        200:
+          description: List of all Places
+          schema:
+            type: object
+            properties:
+              places:
+                type: object
+                items:
+                  $ref: '#/definitions/Place_and_character'
+    post:
+      operationId: api.juego_tornos_places.create_place
+      tags: [Place]
+      summary: Create a new Place
+      parameters:
+        - name: place_data
+          in: body
+          schema:
+            $ref: '#/definitions/Place'
+      responses:
+        201:
+          description: New place created
+        400:
+          description: Error creating place
+
+  /place/{place_id}:
+    get:
+      operationId: api.juego_tornos_places.find_place_by_id
+      tags: [Place]
+      summary: Find a place by its Id
+      parameters:
+        - $ref: '#/parameters/place_id'
+      responses:
+        200:
+          description: Definition of a Place
+          schema:
+            type: object
+            properties:
+              places:
+                type: object
+                items:
+                  $ref: '#/definitions/Place'
+        404:
+          description: Place does not exist
+    put:
+      tags: [Place]
+      operationId: api.juego_tornos_places.update_place
+      summary: Update a place identified by its id
+      parameters:
+        - $ref: '#/parameters/place_id'
+        - name: place_data
+          in: body
+          schema:
+            $ref: '#/definitions/Place'
+      responses:
+        201:
+          description: Place updated
+        400:
+          description: Error updating place
+    delete:
+      tags: [Place]
+      operationId: api.juego_tornos_places.delete_place
+      summary: Remove a place identified by its id
+      parameters:
+        - $ref: '#/parameters/place_id'
+      responses:
+        200:
+          description: Place was deleted
+        400:
+          description: Error deleting place
+        404:
+          description: Place does not exists
+  /character:
+    get:
+      operationId: api.juego_tornos_characters.find_all_characters
+      tags: [Character]
+      summary: Get all Characters
+      responses:
+        200:
+          description: List of all Characters
+          schema:
+            type: object
+            $ref: '#/definitions/Character'
+        204:
+          description: No characters found
+    post:
+      operationId: api.juego_tornos_characters.create_character
+      tags: [Character]
+      summary: Create a new Character
+      parameters:
+        - name: character_data
+          in: body
+          schema:
+            $ref: '#/definitions/Character'
+      responses:
+        201:
+          description: New character created
+        400:
+          description: Error creating character
+  /character/findByPlace/{place_id}:
+    get:
+      operationId: api.juego_tornos_characters.find_characters_by_place_id
+      tags: [Character]
+      summary: Find all characters by their place_id
+      parameters:
+        - $ref: '#/parameters/place_id'
+      responses:
+        200:
+          description: List of all Characters
+          schema:
+            type: object
+            $ref: '#/definitions/Character'
+        204:
+          description: No characters found
+  /character/{character_id}:
+    get:
+      operationId: api.juego_tornos_characters.find_character_by_id
+      tags: [Character]
+      summary: Find a character identified by its id
+      parameters:
+        - $ref: '#/parameters/character_id'
+      responses:
+        200:
+          description: Definition of a Character
+          schema:
+            type: object
+            $ref: '#/definitions/Character'
+        404:
+          description: Character does not exist
+    put:
+      tags: [Character]
+      operationId: api.juego_tornos_characters.update_character
+      summary: Update a character identified by its id
+      parameters:
+        - $ref: '#/parameters/character_id'
+        - name: character_data
+          in: body
+          schema:
+            $ref: '#/definitions/Character'
+      responses:
+        201:
+          description: Character updated
+        400:
+          description: Error updating character
+    delete:
+      tags: [Character]
+      operationId: api.juego_tornos_characters.delete_character_by_id
+      summary: Remove a character identified by its id
+      parameters:
+        - $ref: '#/parameters/character_id'
+      responses:
+        200:
+          description: Character was deleted
+        404:
+          description: Character does not exists
+
+parameters:
+  place_id:
+    name: place_id
+    description: Place's Unique identifier
+    in: path
+    type: string
+    required: true
+    pattern: "^[0-9]+$"
+  character_id:
+    name: character_id
+    description: Character's Unique identifier
+    in: path
+    type: string
+    required: true
+    pattern: "^[0-9]+$"
+
+definitions:
+  Place:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        description: Place's unique name
+        example: "Westeros"
+        minLength: 1
+        maxLength: 100
+  Place_and_character:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+      characters:
+        type: array
+        items:
+          $ref: '#/definitions/Character'
+
+  Character:
+    type: object
+    required:
+      - name
+      - king
+    properties:
+      name:
+        type: string
+        description: Character's unique name.
+        example: "Jon"
+        minLength: 1
+        maxLength: 100
+      place_id:
+        type: string
+        description: Character's place id. Required if the character is alive.
+        example: "3"
+        pattern: "^[0-9]+$"
+      king:
+        type: boolean
+        description: If a character is the king of the place.
+        example: false
+      alive:
+        type: boolean
+        description: If a character ir alive(true) or dead(false). If not set, defaults to dead.
+        example: false
