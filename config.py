@@ -9,10 +9,10 @@ SWAGGER_DIR = os.path.join(BASE_DIR, 'api', 'swagger.yml')
 
 
 # services endpoints
-PLACES_API_URL = 'places_api:8081/api'
+PLACES_API_URL = 'http://places_api:8081/api'
 PLACES_ENDPOINT = f'{PLACES_API_URL}/place'
 
-CHARACTERS_API_URL = 'places_api:8082/api'
+CHARACTERS_API_URL = 'http://characters_api:8082/api'
 CHARACTERS_ENDPOINT = f'{CHARACTERS_API_URL}/character'
 CHARACTERS_FIND_BY_PLACE_ENDPOINT = f'{CHARACTERS_ENDPOINT}/findByPlace'
 
